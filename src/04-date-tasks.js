@@ -53,8 +53,13 @@ function parseDataFromIso8601(d) {
  *    Date(2012,1,1)    => true
  *    Date(2015,1,1)    => false
  */
-function isLeapYear(/* date */) {
-  throw new Error('Not implemented');
+function isLeapYear(date) {
+  const y = date.getFullYear();
+  let result = true;
+  if (y % 4 > 0) result = false;
+  if (!(y % 100)) result = false;
+  if (!(y % 400)) result = true;
+  return result;
 }
 
 
@@ -73,8 +78,23 @@ function isLeapYear(/* date */) {
  *    Date(2000,1,1,10,0,0),  Date(2000,1,1,10,0,0,250)     => "00:00:00.250"
  *    Date(2000,1,1,10,0,0),  Date(2000,1,1,15,20,10,453)   => "05:20:10.453"
  */
-function timeSpanToString(/* startDate, endDate */) {
-  throw new Error('Not implemented');
+function timeSpanToString(startDate, endDate) {
+  let ms = endDate - startDate;
+  let msS = '00';
+  let sS = '0';
+  let minS = '0';
+  let hS = '0';
+  let s = Math.floor(ms / 1000);
+  let m = Math.floor(s / 60);
+  const h = Math.floor(m / 60);
+  m -= h * 60;
+  s -= m * 60;
+  ms -= s * 1000;
+  hS += h.toString();
+  minS += m.toString();
+  sS += s.toString();
+  msS += ms.toString();
+  return `${hS.slice(-2)}:${minS.slice(-2)}:${sS.slice(-2)}.${msS.slice(-3)}`;
 }
 
 
@@ -94,8 +114,19 @@ function timeSpanToString(/* startDate, endDate */) {
  *    Date.UTC(2016,3,5,18, 0) => Math.PI
  *    Date.UTC(2016,3,5,21, 0) => Math.PI/2
  */
-function angleBetweenClockHands(/* date */) {
-  throw new Error('Not implemented');
+function angleBetweenClockHands(date) {
+  let m = date.getMinutes();
+  const s = date.getSeconds();
+  const ms = date.getMilliseconds();
+  let h = date.getHours();
+  if (h > 11) h -= 12;
+  h += 9;
+  if (h > 11) h -= 12;
+  h = h / 12 + m / 720;
+  m = m / 60 + s / 3600 + ms / 3600 / 1000;
+  let result = Math.abs(h - m) * 2 * Math.PI;
+  if (result > Math.PI) result -= Math.PI;
+  return result;
 }
 
 
